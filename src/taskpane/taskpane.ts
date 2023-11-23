@@ -10,7 +10,7 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Excel) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
-    document.getElementById("addCluster").onclick = run;
+    document.getElementById("addCluster").onclick = addCluster;
     document.getElementById("addRegister").onclick = addRegister;
   }
 });
@@ -66,40 +66,14 @@ export async function addRegister() {
        * Insert your Excel code here
        */
       const range = context.workbook.getSelectedRange();
-
-      // // Read the range address
-
-
-
-
-      // // Update the fill color
-      // range.format.fill.color = "green";
-
-      //range.rowIndex
       const sheet = context.workbook.worksheets.getActiveWorksheet();
-      // let expensesTable = sheet.tables.add("A1:D1", true /*hasHeaders*/);
-      // expensesTable.name = "ExpensesTable";
-
-      // expensesTable.getHeaderRowRange().values = [["Date", "Merchant", "Category", "Amount"]];
-
-      // expensesTable.rows.add(null /*add rows to the end of the table*/, [
-      //   ["1/1/2017", "The Phone Company", "Communications", "$120"],
-      //   ["1/2/2017", "Northwind Electric Cars", "Transportation", "$142"],
-      //   ["1/5/2017", "Best For You Organics Company", "Groceries", "$27"],
-      //   ["1/10/2017", "Coho Vineyard", "Restaurant", "$33"],
-      //   ["1/11/2017", "Bellows College", "Education", "$350"],
-      //   ["1/15/2017", "Trey Research", "Other", "$135"],
-      //   ["1/15/2017", "Best For You Organics Company", "Groceries", "$97"]
-      // ]);
-
-
       // Create the headers and format them to stand out.
       let headers = [
-        ["Register"]
+        ["register"]
       ];
       range.load("rowIndex");
-      // const usedRange = sheet.getUsedRange();
-      // usedRange.load('columnCount');
+      const usedRange = sheet.getUsedRange();
+      usedRange.load('columnCount');
       await context.sync();
 
       // usedRange.columnCount;
@@ -107,8 +81,8 @@ export async function addRegister() {
       const row_start = range.rowIndex + 1;
       let row = row_start;
 
-      // const columnCount = 14 > usedRange.columnCount ? 14 : usedRange.columnCount;
-      const columnCount = 14;
+      const columnCount = 14 > usedRange.columnCount ? 14 : usedRange.columnCount;
+      //const columnCount = 14;
 
       const columnstr = String.fromCharCode(65 + columnCount - 1);
       let rangestr = "A" + row + ":" + columnstr + row;
@@ -189,6 +163,11 @@ export async function addRegister() {
 
       rangestr = "A" + (row_start + 2);
       let dataRange = sheet.getRange(rangestr);
+      dataRange.dataValidation.prompt = {
+        message: "register的标识字符串",
+        showPrompt: true,
+        title: "name"
+      };
       let textLenRule = {
         textLength: {
           formula1: 16,
@@ -275,7 +254,7 @@ export async function addRegister() {
         title: "alternate"
       };
 
-      rangestr = "J" + (row_start + 2);
+      rangestr = "K" + (row_start + 2);
       dataRange = sheet.getRange(rangestr);
       dataRange.dataValidation.prompt = {
         message: "定义寄存器数组，并指定元素数量",
@@ -291,13 +270,6 @@ export async function addRegister() {
       };
       dataRange.dataValidation.rule = wholeRule;
 
-      rangestr = "K" + (row_start + 2);
-      dataRange = sheet.getRange(rangestr);
-      dataRange.dataValidation.prompt = {
-        message: "指定两个相邻元素之间的地址增量（以字节为单位）",
-        showPrompt: true,
-        title: "dimIncrement"
-      };
 
       rangestr = "L" + (row_start + 2);
       dataRange = sheet.getRange(rangestr);
@@ -518,6 +490,237 @@ export async function addRegister() {
 
         conditionalFormat.custom.rule.formula = '=ISBLANK(B' + row_index + ')';
       }
+
+
+      if (Office.context.requirements.isSetSupported("ExcelApi", "1.2")) {
+        sheet.getUsedRange().format.autofitColumns();
+        sheet.getUsedRange().format.autofitRows();
+      }
+
+      // await context.sync();
+      // console.log(`The range address was ${range.address}.`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function addCluster() {
+  try {
+    await Excel.run(async (context) => {
+      /**
+       * Insert your Excel code here
+       */
+      const range = context.workbook.getSelectedRange();
+      const sheet = context.workbook.worksheets.getActiveWorksheet();
+
+      // Create the headers and format them to stand out.
+      let headers = [
+        ["cluster"]
+      ];
+      range.load("rowIndex");
+      const usedRange = sheet.getUsedRange();
+      usedRange.load('columnCount');
+      await context.sync();
+      const row_start = range.rowIndex + 1;
+      let row = row_start;
+
+      const columnCount = 14 > usedRange.columnCount ? 14 : usedRange.columnCount;
+      //const columnCount = 14;
+
+      const columnstr = String.fromCharCode(65 + columnCount - 1);
+      let rangestr = "A" + row + ":" + columnstr + row;
+      let headerRange = sheet.getRange(rangestr);
+      headerRange.insert(Excel.InsertShiftDirection.down);
+      headerRange.insert(Excel.InsertShiftDirection.down);
+      headerRange.insert(Excel.InsertShiftDirection.down);
+      headerRange.insert(Excel.InsertShiftDirection.down);
+      headerRange.insert(Excel.InsertShiftDirection.down);
+
+      rangestr = 'A' + row
+      headerRange = sheet.getRange(rangestr);
+      headerRange.values = headers;
+
+      rangestr = "A" + row + ":L" + row;
+      headerRange = sheet.getRange(rangestr);
+      headerRange.merge();
+
+      headerRange.format.fill.color = "#D0CECE";
+      headerRange.format.font.color = "Black";
+      headerRange.format.font.bold = true;
+      headerRange.format.horizontalAlignment = 'Left';
+
+      headers = [["name", "addressOffset", "alternateCluster", "alternateGroupName", "headerStructName", "dim", "dimIncrement", "dimName", "description", "", "", ""]
+      ];
+      row += 1;
+      rangestr = "A" + row + ":L" + row;
+      headerRange = sheet.getRange(rangestr);
+      headerRange.values = headers;
+      headerRange.format.fill.color = "#D0CECE";
+      headerRange.format.font.color = "Black";
+      headerRange.format.font.bold = true;
+
+
+      rangestr = "A" + row_start + ":L" + (row_start + 5);
+      const bodyRange = sheet.getRange(rangestr);
+      bodyRange.format.borders.getItem('InsideHorizontal').style = 'Continuous';
+      bodyRange.format.borders.getItem('InsideVertical').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeBottom').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeLeft').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeRight').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeTop').style = 'Continuous';
+
+      bodyRange.format.borders.getItem('EdgeTop').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeBottom').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeLeft').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeRight').weight = 'Medium';
+
+
+
+
+      for (let row_index = row_start + 2; row_index < row_start + 5; ++row_index) {
+        rangestr = "A" + row_index;
+        let dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "标识cluster的字符串",
+          showPrompt: true,
+          title: "name"
+        };
+        let textLenBetwRule = {
+          textLength: {
+            formula1: 2,
+            formula2: 16,
+            operator: Excel.DataValidationOperator.between
+          }
+        };
+        dataRange.dataValidation.rule = textLenBetwRule;
+
+        rangestr = "B" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "相对于器件的“baseAddress”的cluster地址偏移。0x开始的十六进制字串",
+          showPrompt: true,
+          title: "name"
+        };
+        textLenBetwRule = {
+          textLength: {
+            formula1: 4,
+            formula2: 6,
+            operator: Excel.DataValidationOperator.between
+          }
+        };
+        dataRange.dataValidation.rule = textLenBetwRule;
+        let conditionalFormat = dataRange.conditionalFormats.add(
+          Excel.ConditionalFormatType.custom
+        );
+
+        // Set the font of negative numbers to red.
+        conditionalFormat.custom.format.font.color = 'red';
+        conditionalFormat.custom.format.fill.color = '#F4B084';
+        conditionalFormat.custom.rule.formula = '= NOT(LEFT(E' + row_index + ',2) ="0x")';
+
+        rangestr = "C" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "如果当前簇是一个可替换簇的描述，指定原始簇的名称",
+          showPrompt: true,
+          title: "alternate"
+        };
+
+
+
+        rangestr = "E" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "指定在头文件中创建的结构体的名称。如果未指定，则使用cluster的name",
+          showPrompt: true,
+          title: "headerStructName"
+        };
+
+        rangestr = "F" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "定义cluster数组",
+          showPrompt: true,
+          title: "dim"
+        };
+
+        let wholeRule = {
+          wholeNumber: {
+            formula1: 2,
+            formula2: 16,
+            operator: Excel.DataValidationOperator.between
+          }
+        };
+        dataRange.dataValidation.rule = wholeRule;
+
+        rangestr = "G" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "指定两个相邻元素之间的地址增量（以字节为单位",
+          showPrompt: true,
+          title: "dimIncrement"
+        };
+
+        rangestr = "H" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "指定C类型结构的名称。如果未定义，则使用寄存器“name",
+          showPrompt: true,
+          title: "dimName"
+        };
+
+        textLenBetwRule = {
+          textLength: {
+            formula1: 2,
+            formula2: 8,
+            operator: Excel.DataValidationOperator.between
+          }
+        };
+        dataRange.dataValidation.rule = textLenBetwRule;
+
+
+        rangestr = "I" + row_index;
+        dataRange = sheet.getRange(rangestr);
+        dataRange.dataValidation.prompt = {
+          message: "描述寄存器簇信息的字符串",
+          showPrompt: true,
+          title: "description"
+        };
+
+        rangestr = "A" + row_index + ':B' + row_index;
+        dataRange = sheet.getRange(rangestr);
+        conditionalFormat = dataRange.conditionalFormats.add(
+          Excel.ConditionalFormatType.custom
+        );
+        conditionalFormat.priority = 0;
+        conditionalFormat.stopIfTrue = true;
+        // Set the font of negative numbers to red.
+        conditionalFormat.custom.format.borders.bottom.color = "red";
+        conditionalFormat.custom.format.borders.top.color = "red";
+        conditionalFormat.custom.format.borders.left.color = "red";
+        conditionalFormat.custom.format.borders.right.color = "red";
+        conditionalFormat.custom.format.fill.color = '#FFC3C3';
+
+        conditionalFormat.custom.rule.formula = '=ISBLANK(B' + row_index + ')';
+      }
+
+      headers = [["end cluster"]
+      ];
+      row = row_start + 5;
+      rangestr = "A" + row;
+      headerRange = sheet.getRange(rangestr);
+      headerRange.values = headers;
+
+      rangestr = "A" + (row_start + 5) + ":L" + (row_start + 5);
+      headerRange = sheet.getRange(rangestr);
+      headerRange.merge();
+
+      headerRange.format.fill.color = "#D0CECE";
+      headerRange.format.font.color = "Black";
+      headerRange.format.font.bold = true;
+      headerRange.format.horizontalAlignment = 'Left';
+
 
 
       if (Office.context.requirements.isSetSupported("ExcelApi", "1.2")) {
