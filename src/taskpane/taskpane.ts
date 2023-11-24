@@ -96,6 +96,22 @@ export async function addRegister() {
       headerRange.insert(Excel.InsertShiftDirection.down);
       headerRange.insert(Excel.InsertShiftDirection.down);
 
+      rangestr = "A" + row_start + ":N" + (row_start + 8);
+      const bodyRange = sheet.getRange(rangestr);
+      bodyRange.conditionalFormats.clearAll();
+      bodyRange.dataValidation.clear();
+      bodyRange.format.borders.getItem('InsideHorizontal').style = 'Continuous';
+      bodyRange.format.borders.getItem('InsideVertical').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeBottom').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeLeft').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeRight').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeTop').style = 'Continuous';
+
+      bodyRange.format.borders.getItem('EdgeTop').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeBottom').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeLeft').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeRight').weight = 'Medium';
+      
 
       rangestr = 'A' + row
       headerRange = sheet.getRange(rangestr);
@@ -132,19 +148,7 @@ export async function addRegister() {
       headerRange.format.font.color = "Black";
       headerRange.format.font.bold = true;
 
-      rangestr = "A" + row_start + ":N" + (row_start + 8);
-      const bodyRange = sheet.getRange(rangestr);
-      bodyRange.format.borders.getItem('InsideHorizontal').style = 'Continuous';
-      bodyRange.format.borders.getItem('InsideVertical').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeBottom').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeLeft').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeRight').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeTop').style = 'Continuous';
 
-      bodyRange.format.borders.getItem('EdgeTop').weight = 'Medium';
-      bodyRange.format.borders.getItem('EdgeBottom').weight = 'Medium';
-      bodyRange.format.borders.getItem('EdgeLeft').weight = 'Medium';
-      bodyRange.format.borders.getItem('EdgeRight').weight = 'Medium';
 
 
       rangestr = "A" + (row_start + 3) + ":A" + (row_start + 8);
@@ -537,6 +541,23 @@ export async function addCluster() {
       headerRange.insert(Excel.InsertShiftDirection.down);
       headerRange.insert(Excel.InsertShiftDirection.down);
 
+      rangestr = "A" + row_start + ":L" + (row_start + 5);
+      const bodyRange = sheet.getRange(rangestr);
+      bodyRange.conditionalFormats.clearAll();
+      bodyRange.dataValidation.clear();
+      bodyRange.format.borders.getItem('InsideHorizontal').style = 'Continuous';
+      bodyRange.format.borders.getItem('InsideVertical').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeBottom').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeLeft').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeRight').style = 'Continuous';
+      bodyRange.format.borders.getItem('EdgeTop').style = 'Continuous';
+
+      bodyRange.format.borders.getItem('EdgeTop').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeBottom').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeLeft').weight = 'Medium';
+      bodyRange.format.borders.getItem('EdgeRight').weight = 'Medium';
+
+
       rangestr = 'A' + row
       headerRange = sheet.getRange(rangestr);
       headerRange.values = headers;
@@ -559,23 +580,6 @@ export async function addCluster() {
       headerRange.format.fill.color = "#D0CECE";
       headerRange.format.font.color = "Black";
       headerRange.format.font.bold = true;
-
-
-      rangestr = "A" + row_start + ":L" + (row_start + 5);
-      const bodyRange = sheet.getRange(rangestr);
-      bodyRange.format.borders.getItem('InsideHorizontal').style = 'Continuous';
-      bodyRange.format.borders.getItem('InsideVertical').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeBottom').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeLeft').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeRight').style = 'Continuous';
-      bodyRange.format.borders.getItem('EdgeTop').style = 'Continuous';
-
-      bodyRange.format.borders.getItem('EdgeTop').weight = 'Medium';
-      bodyRange.format.borders.getItem('EdgeBottom').weight = 'Medium';
-      bodyRange.format.borders.getItem('EdgeLeft').weight = 'Medium';
-      bodyRange.format.borders.getItem('EdgeRight').weight = 'Medium';
-
-
 
 
       for (let row_index = row_start + 2; row_index < row_start + 5; ++row_index) {
